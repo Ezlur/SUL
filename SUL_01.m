@@ -3,25 +3,24 @@ clear
 
 V=100;
 
+rad2deg(kinem(850));
+
 i = 1;
 for x = 50:10:850
     angles = kinem(x);
     fk = fop(angles(1), V);
     A(i,1) = x;
-    B(i) = x;
-    A(i,2) = rad2deg(angles(1));
-    C(i) = A(i,2);
+    alpha(i) = angles(1);
+    A(i,2) = fa(x,V);
     i = i+1;
 end
-A
-plot(B,C)
-
+plot(A(:,1),A(:,2))
 
 i=1;
 j=1;
 for x=50:10:850
     for V=50:5:100
-        F(i,j)=fa(x, V)
+        F(i,j)=fa(x, V);
         i=i+1;
     end
     i=1;
@@ -32,13 +31,15 @@ end
 function Fa = fa(x, V)
 
 L = [566 800+x];
-Fg = 1000;  % [N]
+g = 9.81;
+m = 500;           % przyjêliœmy 500kg jako 0,01 masy samolotu
+Fg = 5000;        % [N]
 angles = kinem(x);
 
-Fax = (-Fg*sin(pi/4 - angles(1))*L(2) - fop(angles(1), V)*cos(pi/4 - angles(1))*L(2))/(sin(angles(3))*L(1) + tan(angles(2))*cos(angles(3))*L(1));
+Fax = (Fg*sin(pi/4 - angles(1))*L(2) - fop(angles(1), V)*cos(pi/4 - angles(1))*L(2))/(sin(angles(3))*L(1) + tan(angles(2))*cos(angles(3))*L(1));
 Fay = -Fax*tan(angles(2));
 
-Fa = sqrt(Fax^2 + Fay^2)
+Fa = sqrt(Fax^2 + Fay^2);
 
 end
 
